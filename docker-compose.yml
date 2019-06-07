@@ -22,12 +22,26 @@ services:
     environment:
       - DEBUG=1
       - SECRET_KEY=foo
+      - DJANGO_SU_NAME=TestUser
+      - DJANGO_SU_EMAIL=test@test.com
+      - DJANGO_SU_PASSWORD=TkU6ZE3hsgfXseEE
       - DB_HOST=products-db
-      - DB_NAME=products_dev
+      - DB_NAME=products
+      - DB_NAME_TEST=products_test
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_PORT=5432
-    ports:
-      - "8000:8000"
+    expose:
+      - 8000
     depends_on:
       - products-db
+
+  nginx:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - api

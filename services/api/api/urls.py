@@ -1,12 +1,11 @@
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework import routers
+from django.urls import path
+from django.conf.urls import include, url
 from products import views
 
-router = routers.DefaultRouter()
-router.register(r'products', views.ProductView, 'product')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    # path('api/', include(router.urls))
+    url(r'^', include('products.urls')),
 ]

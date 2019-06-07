@@ -15,15 +15,17 @@ services:
     restart: always
     build:
       context: ./services/api
-      dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - "./services/api/:/usr/src/app/"
+      dockerfile: Dockerfile.prod
+    command: gunicorn api.wsgi:application --bind 0.0.0.0:8000
     environment:
-      - DEBUG=1
+      - DEBUG=0
       - SECRET_KEY=foo
+      - DJANGO_SU_NAME=TestUser
+      - DJANGO_SU_EMAIL=test@test.com
+      - DJANGO_SU_PASSWORD=TkU6ZE3hsgfXseEE
       - DB_HOST=products-db
-      - DB_NAME=products_dev
+      - DB_NAME=products
+      - DB_NAME_TEST=products_test
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_PORT=5432
@@ -31,3 +33,13 @@ services:
       - "8000:8000"
     depends_on:
       - products-db
+
+  nginx:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile.prod
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - api
