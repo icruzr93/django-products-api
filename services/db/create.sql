@@ -1,1 +1,1 @@
-CREATE DATABASE products;
+CREATE DATABASE products_dev;
